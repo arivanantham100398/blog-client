@@ -1,12 +1,15 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import axios from "axios"
 
 function Register() {
+    const navigate = useNavigate()
     const [formDetails, setFormDetails] = useState({
         name: "",
         email: "",
         password: ""
     })
+    const [error,setError]=useState("")
 
     function inputHandler(e) {
         setFormDetails({
@@ -15,20 +18,19 @@ function Register() {
         })
     }
 
-    function createAccount(e) {
+    async function createAccount(e) {
         e.preventDefault()
-        fetch("http://1to21.com/api/auth/register", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(formDetails)
-        })
-            .then((res) => { return res.json()})
-            .then((data) => console.log(data))
+        try {
+            setError("")
+            const response = await axios.post("http://1to21.com/api/auth/register", formDetails)
+            if(response.data.success){
+                navigate("/login")
+            }
+        } catch (error) {
+            setError(error.response.data.message);
+        }
     }
 
-    console.log(formDetails);
     return (
         <section className="bg-gray-50 dark:bg-gray-900">
             <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
@@ -60,6 +62,9 @@ function Register() {
                                 <input onChange={inputHandler}
                                     type="password" name="password" id="password" placeholder="••••••••" className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required="" />
                             </div>
+                            <h1 className="my-5 text-red-700">
+                                {error}
+                            </h1>
                             <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
                                 onClick={createAccount}
                             >
@@ -67,7 +72,7 @@ function Register() {
                             </button>
                             <p className="text-sm font-light text-gray-500 dark:text-gray-400">
                                 Already have an account?
-                                <Link to="/" className="font-medium text-primary-600 hover:underline dark:text-primary-500">Login here</Link>
+                                <Link to="/login" className="font-medium text-primary-600 hover:underline dark:text-primary-500">Login here</Link>
                             </p>
                         </form>
                     </div>

@@ -1,11 +1,14 @@
+import axios from "axios";
 import React, { useState } from "react";
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 
 function Login() {
+    const navigate = useNavigate()
     const [loginFormDetails, setLoginFormDetails] = useState({
         email: "",
         password: ""
     })
+    const [error, setError] = useState("")
     function inputHandler(e) {
         setLoginFormDetails({
             ...loginFormDetails,
@@ -13,21 +16,20 @@ function Login() {
         })
     }
 
-    function createAccount(e) {
+    async function loginAccount(e) {
         e.preventDefault()
-        fetch("http://1to21.com/api/auth/login", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(loginFormDetails)
-        })
-            .then((res) => { return res.json()})
-            .then((data) => console.log(data))
+        try {
+            setError("")
+            const response = await axios.post("http://1to21.com/api/auth/login", loginFormDetails)
+            if (response.data.success) {
+                navigate("/")
+                localStorage.setItem("auth", JSON.stringify(response.data));
+            }
+        } catch (error) {
+            error.response && setError(error.response.data.message);
+        }
     }
 
-
-    console.log(loginFormDetails);
     return (
         <>
             <section className="bg-gray-50 dark:bg-gray-900">
@@ -53,11 +55,14 @@ function Login() {
                                         onChange={inputHandler}
                                         type="password" name="password" id="password" placeholder="••••••••" className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required="" />
                                 </div>
+                                <h1 className="my-5 text-red-700">
+                                    {error}
+                                </h1>
                                 <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-                                onClick={createAccount}
-                            >
-                                Login
-                            </button><p className="text-sm font-light text-gray-500 dark:text-gray-400">
+                                    onClick={loginAccount}
+                                >
+                                    Login
+                                </button><p className="text-sm font-light text-gray-500 dark:text-gray-400">
                                     Don’t have an account yet?
                                     <Link to="/register" className="font-medium text-primary-600 hover:underline dark:text-primary-500">
                                         Sign up
