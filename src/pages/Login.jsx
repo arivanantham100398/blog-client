@@ -1,9 +1,20 @@
 import axios from "axios";
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom"
+import { authContext } from "../context/authContext";
 
 function Login() {
     const navigate = useNavigate()
+    const { isUserLoggedIn, getToken } = useContext(authContext)
+
+    useEffect(() => {
+        getToken()
+    }), []
+
+    useEffect(()=>{
+        isUserLoggedIn && navigate("/")
+    },[isUserLoggedIn])
+
     const [loginFormDetails, setLoginFormDetails] = useState({
         email: "",
         password: ""

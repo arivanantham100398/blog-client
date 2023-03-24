@@ -1,15 +1,26 @@
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios"
+import { authContext } from "../context/authContext";
 
 function Register() {
     const navigate = useNavigate()
+    const { isUserLoggedIn, getToken } = useContext(authContext)
+
+    useEffect(() => {
+        getToken()
+    }), []
+
+    useEffect(() => {
+        isUserLoggedIn && navigate("/")
+    }, [isUserLoggedIn])
+
     const [formDetails, setFormDetails] = useState({
         name: "",
         email: "",
         password: ""
     })
-    const [error,setError]=useState("")
+    const [error, setError] = useState("")
 
     function inputHandler(e) {
         setFormDetails({
@@ -23,7 +34,7 @@ function Register() {
         try {
             setError("")
             const response = await axios.post("http://1to21.com/api/auth/register", formDetails)
-            if(response.data.success){
+            if (response.data.success) {
                 navigate("/login")
             }
         } catch (error) {
