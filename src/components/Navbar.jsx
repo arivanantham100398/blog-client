@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { useContext } from 'react'
 import { authContext } from '../context/authContext'
 
@@ -9,12 +9,12 @@ function Navbar() {
 
     useEffect(() => {
         getToken()
-    },[]) 
+    },[navigate]) 
 
     return (
         <nav className="bg-white px-2 sm:px-4 py-2.5 dark:bg-gray-900 fixed w-full z-20 top-0 left-0 border-b border-gray-200 dark:border-gray-600">
             <div className="container flex flex-wrap items-center justify-between mx-auto">
-                <h1 className='text-2xl font-bold '>Blog App</h1>
+                <h1 className='cursor-pointer text-2xl font-bold'><Link to={"/"}>Blog App</Link></h1>
                 <div className="flex md:order-2">
                     {isUserLoggedIn ? <button
                         onClick={() => navigate("/profile")}
@@ -34,48 +34,7 @@ function Navbar() {
                     </button>
                 </div>
                 <div className="items-center justify-between hidden w-full md:flex md:w-auto md:order-1" id="navbar-sticky">
-                    {/* <ul className="flex flex-col p-4 mt-4 border border-gray-100 rounded-lg bg-gray-50 md:flex-row md:space-x-8 md:mt-0 md:text-sm md:font-medium md:border-0 md:bg-white dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700">
-                        <li>
-                            <NavLink
-                                style={({ isActive }) => ({
-                                    color: isActive ? 'blue' : '#000',
-                                    fontWeight: isActive ? '700' : '600',
-                                })}
-                                to="/">
-                                Home
-                            </NavLink>
-                        </li>
-                        <li>
-                            <NavLink
-                                style={({ isActive }) => ({
-                                    color: isActive ? 'blue' : '#000',
-                                    fontWeight: isActive ? '700' : '600',
-                                })}
-                                to="/">
-                                Home
-                            </NavLink>
-                        </li>
-                        <li>
-                            <NavLink
-                                style={({ isActive }) => ({
-                                    color: isActive ? 'blue' : '#000',
-                                    fontWeight: isActive ? '700' : '600',
-                                })}
-                                to="/">
-                                Home
-                            </NavLink>
-                        </li>
-                        <li>
-                            <NavLink
-                                style={({ isActive }) => ({
-                                    color: isActive ? 'blue' : '#000',
-                                    fontWeight: isActive ? '700' : '600',
-                                })}
-                                to="/">
-                                Home
-                            </NavLink>
-                        </li>
-                    </ul> */}
+                
                 </div>
             </div>
         </nav>

@@ -1,13 +1,22 @@
 import { createContext, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 export const authContext = createContext()
 
 export const AuthProvider = ({ children }) => {
+    const navigate = useNavigate()
     const [isUserLoggedIn, setIsUserLoggedIn] = useState(false)
     const [tokenDetails, setTokenDetails] = useState({})
 
     function getToken() {
         setTokenDetails(JSON.parse(window.localStorage.getItem("auth")));
+    }
+
+    function logout() {
+        window.localStorage.clear()
+        setTokenDetails({})
+        navigate("/")
+        setIsUserLoggedIn(false)
     }
 
     useEffect(() => {
@@ -23,7 +32,8 @@ export const AuthProvider = ({ children }) => {
     const obj = {
         isUserLoggedIn,
         getToken,
-        tokenDetails
+        tokenDetails,
+        logout
     }
 
     return (
