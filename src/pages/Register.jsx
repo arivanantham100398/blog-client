@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios"
 import { authContext } from "../context/authContext";
+import { toast } from "react-toastify";
 
 function Register() {
     const navigate = useNavigate()
@@ -36,6 +37,9 @@ function Register() {
             const response = await axios.post("http://1to21.com/api/auth/register", formDetails)
             if (response.data.success) {
                 navigate("/login")
+                toast.success('Successfully Registered !', {
+                    position: toast.POSITION.BOTTOM_RIGHT
+                });
             }
         } catch (error) {
             setError(error.response.data.message);
