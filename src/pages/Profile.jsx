@@ -23,13 +23,13 @@ function Profile() {
 
     async function getAllMyPosts() {
         if (tokenDetails && tokenDetails.email) {
-            const res = await axios.get(`http://1to21.com/api/posts?email=${tokenDetails.email}`)
+            const res = await axios.get(`https://1to21.com/api/posts?email=${tokenDetails.email}`)
             setAllMyPosts(res.data);
         }
     }
 
     async function createMyPost() {
-        const res = await axios.post(`http://1to21.com/api/posts`, createPostDetails, {
+        const res = await axios.post(`https://1to21.com/api/posts`, createPostDetails, {
             headers: headers
         })
         if (res.data.success) {
@@ -62,7 +62,7 @@ function Profile() {
     }
 
     async function handleDelete(id) {
-        const res = await axios.delete(`http://1to21.com/api/posts/${id}`, {
+        const res = await axios.delete(`https://1to21.com/api/posts/${id}`, {
             headers: {
                 token: `Bearer ${tokenDetails.accessToken}`
             },

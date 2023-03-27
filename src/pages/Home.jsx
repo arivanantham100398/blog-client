@@ -10,7 +10,7 @@ function Home() {
 
     async function getAllPosts() {
         setIsLoading(true)
-        const res = await axios.get("http://1to21.com/api/posts")
+        const res = await axios.get("https://1to21.com/api/posts")
         setAllPosts(res.data);
         setIsLoading(false)
     }

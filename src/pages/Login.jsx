@@ -31,7 +31,7 @@ function Login() {
         e.preventDefault()
         try {
             setError("")
-            const response = await axios.post("http://1to21.com/api/auth/login", loginFormDetails)
+            const response = await axios.post("https://1to21.com/api/auth/login", loginFormDetails)
             if (response.data.success) {
                 navigate("/")
                 localStorage.setItem("auth", JSON.stringify(response.data));

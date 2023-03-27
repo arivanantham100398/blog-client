@@ -9,12 +9,12 @@ function SinglePost() {
     const navigate = useNavigate()
 
     async function getSinglePost() {
-        const res = await axios.get(`http://1to21.com/api/posts/${id}`)
+        const res = await axios.get(`https://1to21.com/api/posts/${id}`)
         setSinglePost(res.data);
     }
 
     async function getAllPosts() {
-        const res = await axios.get("http://1to21.com/api/posts")
+        const res = await axios.get("https://1to21.com/api/posts")
         setAllPosts(res.data);
     }
 

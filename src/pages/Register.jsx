@@ -34,7 +34,7 @@ function Register() {
         e.preventDefault()
         try {
             setError("")
-            const response = await axios.post("http://1to21.com/api/auth/register", formDetails)
+            const response = await axios.post("https://1to21.com/api/auth/register", formDetails)
             if (response.data.success) {
                 navigate("/login")
                 toast.success('Successfully Registered !', {
