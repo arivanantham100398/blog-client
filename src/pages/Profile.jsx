@@ -29,8 +29,6 @@ function Profile() {
         photo: "",
         categories: cat
     })
-    
-    console.log(editPostData);
 
     function editPostHandle(e) {
         setEditPost({
@@ -39,6 +37,31 @@ function Profile() {
         })
     }
 
+    function handlePostDetails(e) {
+        setCreatePostDetails({
+            ...createPostDetails,
+            [e.target.name]: e.target.value
+        })
+    }
+
+    useEffect(() => {
+        getAllMyPosts()
+        setCreatePostDetails({
+            ...createPostDetails,
+            email: tokenDetails.email
+        })
+    }, [tokenDetails])
+
+    useEffect(() => {
+        setEditPost({
+            ...editPostData,
+            title: currentEditPost.title,
+            desc: currentEditPost.desc,
+            photo: currentEditPost.photo,
+            email: tokenDetails.email
+        });
+    }, [currentEditPost])
+
     async function getAllMyPosts() {
         if (tokenDetails && tokenDetails.email) {
             const res = await axios.get(`https://1to21.com/api/posts?email=${tokenDetails.email}`)
@@ -46,7 +69,13 @@ function Profile() {
         }
     }
 
-    async function createMyPost() {
+    async function handleGetEditPost(id) {
+        const res = await axios.get(`https://1to21.com/api/posts/${id}`)
+        setEditModalShow(true)
+        setCurrentEditPost(res.data)
+    }
+
+    async function handleSubmitCreatePost() {
         const res = await axios.post(`https://1to21.com/api/posts`, createPostDetails, {
             headers: headers
         })
@@ -59,21 +88,8 @@ function Profile() {
         }
     }
 
-    useEffect(() => {
-        getAllMyPosts()
-        setCreatePostDetails({
-            ...createPostDetails,
-            email: tokenDetails.email
-        })
-    }, [tokenDetails])
-
-    function handleSubmitPost(e) {
-        e.preventDefault()
-        createMyPost()
-    }
-
     async function handleSubmitEditPost() {
-        const res = await axios.put(`https://1to21.com/api/posts/${id}`, editPostData, {
+        const res = await axios.put(`https://1to21.com/api/posts/${currentEditPost._id}`, editPostData, {
             headers: headers
         })
         if (res.data.success) {
@@ -83,13 +99,6 @@ function Profile() {
                 position: toast.POSITION.BOTTOM_RIGHT
             });
         }
-    }
-
-    function handlePostDetails(e) {
-        setCreatePostDetails({
-            ...createPostDetails,
-            [e.target.name]: e.target.value
-        })
     }
 
     async function handleDelete(id) {
@@ -109,25 +118,9 @@ function Profile() {
         }
     }
 
-    async function handleEdit(id) {
-        const res = await axios.get(`https://1to21.com/api/posts/${id}`)
-        setEditModalShow(true)
-        setCurrentEditPost(res.data)
-    }
-
     function handleLogout() {
         logout()
     }
-
-    useEffect(() => {
-        setEditPost({
-            ...editPostData,
-            title: currentEditPost.title,
-            desc: currentEditPost.desc,
-            photo: currentEditPost.photo,
-            email: tokenDetails.email
-        });
-    }, [currentEditPost])
 
     return (
         <>
@@ -182,7 +175,7 @@ function Profile() {
                                             Delete
                                         </button>
                                         <button
-                                            onClick={() => handleEdit(post._id)}
+                                            onClick={() => handleGetEditPost(post._id)}
                                             className="ml-5 inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
                                             Edit
                                         </button>
@@ -215,7 +208,7 @@ function Profile() {
                             </div>
                             <div className="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
                                 <button
-                                    onClick={handleSubmitPost}
+                                    onClick={handleSubmitCreatePost}
                                     type="button"
                                     className="inline-flex w-full justify-center rounded-md bg-blue-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500 sm:ml-3 sm:w-auto">
                                     Create Post
@@ -261,7 +254,7 @@ function Profile() {
                                     Edit Post
                                 </button>
                                 <button
-                                    onClick={() => setShowModal(false)}
+                                    onClick={() => setEditModalShow(false)}
                                     type="button"
                                     className="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto"
                                 >
